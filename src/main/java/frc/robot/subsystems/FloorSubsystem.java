@@ -15,20 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class FloorSubsystem extends SubsystemBase {
-  public enum Speed {
-    FEED(5000);
 
-    private final double rpm;
-
-    private Speed (double rpm) {
-      this.rpm = rpm;
-    }
-
-    public AngularVelocity angularVelocity() {
-      return RPM.of(rpm);
-    }
-  }
-
+  // Intialize variables
   private final TalonFX floorMotor;
   private final VelocityVoltage velocityRequest;
   private final VoltageOut voltageRequest;
@@ -66,19 +54,13 @@ public class FloorSubsystem extends SubsystemBase {
     voltageRequest = new VoltageOut(0);
   }
 
-   public void setFloor(Speed speed) {
-      floorMotor.setControl(velocityRequest.withVelocity(speed.angularVelocity()));
+   public void setFloor(AngularVelocity rpm) {
+      floorMotor.setControl(velocityRequest.withVelocity(rpm));
   }
 
   public void stopFloor() {
     floorMotor.setControl(voltageRequest.withOutput(Volts.of(0)));
   }
-
-  // Simple inline command
-  public Command floorCommand() {
-    return startEnd(() -> setFloor(Speed.FEED), () -> stopFloor());
-  }
-
 
   @Override
   public void periodic() {

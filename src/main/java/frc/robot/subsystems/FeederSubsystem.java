@@ -20,20 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class FeederSubsystem extends SubsystemBase {
-  public enum Speed {
-    FEED(5000);
-
-    private final double rpm;
-
-    private Speed (double rpm) {
-      this.rpm = rpm;
-    }
-
-    public AngularVelocity angularVelocity() {
-      return RPM.of(rpm);
-    }
-  }
-
+  // Intialize variables
   private final TalonFX feederMotor;
   private final VelocityVoltage velocityRequest;
   private final VoltageOut voltageRequest;
@@ -71,18 +58,14 @@ public class FeederSubsystem extends SubsystemBase {
     voltageRequest = new VoltageOut(0);
   }
 
-   public void setFeeder(Speed speed) {
-      feederMotor.setControl(velocityRequest.withVelocity(speed.angularVelocity()));
+   public void setFeeder(AngularVelocity rpm) {
+      feederMotor.setControl(velocityRequest.withVelocity(rpm));
   }
 
   public void stopFeeder() {
     feederMotor.setControl(voltageRequest.withOutput(Volts.of(0)));
   }
 
-  // Simple inline command
-  public Command feederCommand() {
-    return startEnd(() -> setFeeder(Speed.FEED), () -> stopFeeder());
-  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
