@@ -17,7 +17,7 @@ import frc.robot.Constants.KrakenX60;
 
 public class FloorSubsystem extends SubsystemBase {
   public enum Speed {
-    FEED(3000);
+    FEED(1500);
 
     private final double rpm;
 
@@ -36,13 +36,13 @@ public class FloorSubsystem extends SubsystemBase {
 
   /** Creates a new FloorSubsystem. */
   public FloorSubsystem() {
-    floorMotor = new TalonFX(31);
+    floorMotor = new TalonFX(32);
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     // Set motor outputs
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     // Current limit
     config.CurrentLimits.SupplyCurrentLimit = 30.0;

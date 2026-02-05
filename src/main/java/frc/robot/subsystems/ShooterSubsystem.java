@@ -22,11 +22,11 @@ public class ShooterSubsystem extends SubsystemBase {
   private final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
   public ShooterSubsystem() {
-    leftMotor = new TalonFX(41);
-    rightMotor = new TalonFX(42);
+    leftMotor = new TalonFX(51);
+    rightMotor = new TalonFX(52);
 
-    configureMotor(leftMotor, InvertedValue.Clockwise_Positive);
-    configureMotor(rightMotor, InvertedValue.CounterClockwise_Positive);
+    configureMotor(leftMotor, InvertedValue.CounterClockwise_Positive);
+    configureMotor(rightMotor, InvertedValue.Clockwise_Positive);
 
     motors = List.of(leftMotor, rightMotor);
   }

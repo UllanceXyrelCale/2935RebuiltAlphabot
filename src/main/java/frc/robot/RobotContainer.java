@@ -83,11 +83,11 @@ public class RobotContainer {
 
     // Shooting Commands
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-      .onTrue(subsystemCommands.shootManually());
+      .whileTrue(subsystemCommands.shootManually());
 
     // Intake Commands
     new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
-      .onTrue(intakeSubsystem.intakeCommand());
+      .whileTrue(intakeSubsystem.intakeCommand());
   }
 
 

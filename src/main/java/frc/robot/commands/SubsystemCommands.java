@@ -22,7 +22,7 @@ public class SubsystemCommands {
   }
 
   public Command shootManually() {
-    return shooterSubsystem.shooterCommand(5000)
+    return shooterSubsystem.shooterCommand(2500)
     .andThen(feed())
     .handleInterrupt(()-> shooterSubsystem.setShooter(0));
   }

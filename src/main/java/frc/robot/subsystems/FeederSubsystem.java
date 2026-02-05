@@ -18,7 +18,7 @@ import frc.robot.Constants.KrakenX60;
 
 public class FeederSubsystem extends SubsystemBase {
   public enum Speed {
-    FEED(5000);
+    FEED(2500);
 
     private final double rpm;
 
@@ -43,7 +43,7 @@ public class FeederSubsystem extends SubsystemBase {
 
     // Set motor outputs
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     // Current limit
     config.CurrentLimits.SupplyCurrentLimit = 30.0;
