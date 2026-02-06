@@ -33,7 +33,9 @@ public class SubsystemCommands {
   }
 
   public Command intakeManually() {
-    return intakeSubsystem.intakeCommand();
+    return Commands.sequence(
+      intakeSubsystem.intakeCommand(),
+      floorSubsystem.floorCommand());
   }
 
   // ------ Helper Commands --------- //
