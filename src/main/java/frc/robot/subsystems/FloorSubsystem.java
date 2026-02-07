@@ -11,7 +11,7 @@ public class FloorSubsystem extends SubsystemBase {
   private final VelocityVoltage velocityRequest;
   
   public FloorSubsystem() {
-    floorMotor = new TalonFX(0);
+    floorMotor = new TalonFX(32);
     velocityRequest = new VelocityVoltage(0).withSlot(0);
 
     floorMotor.getConfigurator().apply(Configs.floorMotor.floorConfig);

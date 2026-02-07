@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public IntakeSubsystem() {
     // Change CAN ID FOR TESTING
-    intakeMotor = new TalonFX(31);
+    intakeMotor = new TalonFX(51);
 
     // Configure motor
     intakeMotor.getConfigurator().apply(Configs.intakeMotor.intakeConfig);
