@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.utils.APTree;
 
+// --------- Editing Note ------------ // 
+// TAKE OFF ONE SIDE OF MOTORS TO GIVE SPACE FOR FLYWHEEL
+
 public class ShooterSubsystem extends SubsystemBase {
 
   // Intialize motors and make top left motor as leader

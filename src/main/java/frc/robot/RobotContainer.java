@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -20,11 +21,13 @@ import frc.robot.commands.ResetPose;
 import frc.robot.commands.ShootSequence;
 import frc.robot.commands.StartFeeder;
 import frc.robot.commands.StartFloor;
+import frc.robot.commands.StartIntake;
 import frc.robot.commands.StartShooter;
 import frc.robot.commands.TurnToAngle;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FloorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 /*
@@ -40,6 +43,7 @@ public class RobotContainer {
   private final FloorSubsystem s_floorSubsystem = new FloorSubsystem();
   private final FeederSubsystem s_feederSubsystem = new FeederSubsystem();
   private final LimelightSubsystem s_limelightSubsystem = new LimelightSubsystem();
+  private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -74,42 +78,57 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+  
+
+    // Auto Test
+    // new JoystickButton(m_driverController, XboxController.Button.kX.value)
+    //    .whileTrue(new SequentialCommandGroup(
+    //      new ResetPose(m_robotDrive, s_limelightSubsystem),
+    //      new DriveToPoint(m_robotDrive, 2.6, 0, 0),
+    //      new TurnToAngle(m_robotDrive, 90),
+    //      new ParallelCommandGroup(
+    //       new DriveToPoint(m_robotDrive, 2.6, 1.95, 90),
+    //       new StartIntake(s_intakeSubsystem, 60).withTimeout(1.5)
+    //      ),
+    //      new DriveToPoint(m_robotDrive, 2.3, 0, 180),
+    //      new ResetPose(m_robotDrive, s_limelightSubsystem),
+    //      new DriveToPoint(m_robotDrive, -1.85, 0.5, 180),
+    //      new TurnToAngle(m_robotDrive, 75),
+    //      new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(3)
+    //     new TurnToAngle(m_robotDrive, 180),
+    //     new WaitCommand(.20),
+    //     new ResetPose(m_robotDrive, s_limelightSubsystem),
+    //     new WaitCommand(.20),
+    //     new DriveToPoint(m_robotDrive, 0.81, 0, 180),
+    //     new WaitCommand(5),
+    //     new DriveToPoint(m_robotDrive, 2.81, 0, 70),
+    //     new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(5)
+    //  ));
+    
     // Final Joystick Commands
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
         .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
-    // Auto Test
-    new JoystickButton(m_driverController, XboxController.Button.kA.value)
-      .whileTrue(new SequentialCommandGroup(
-        new ResetPose(m_robotDrive, s_limelightSubsystem),
-        new DriveToPoint(m_robotDrive, 1.89, 0, 90),
-        new DriveToPoint(m_robotDrive, 1.89, 1.95, 90),
-        new DriveToPoint(m_robotDrive, 1.89, 0, 180),
-        new ResetPose(m_robotDrive, s_limelightSubsystem),
-        new DriveToPoint(m_robotDrive, -1.85, 0, 65),
-        new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(6),
-        new TurnToAngle(m_robotDrive, 180),
-        new WaitCommand(.20),
-        new ResetPose(m_robotDrive, s_limelightSubsystem),
-        new WaitCommand(.20),
-        new DriveToPoint(m_robotDrive, 0.81, 0, 180),
-        new WaitCommand(5),
-        new DriveToPoint(m_robotDrive, 2.81, 0, 70),
-        new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(5)
-      ));
+    // new JoystickButton(m_driverController, XboxController.Button.kA.value)
+    //   .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem, 2));
 
-    new JoystickButton(m_driverController, XboxController.Button.kX.value)
-      .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem, 2));
+    // new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+    // .whileTrue(new ResetPose(m_robotDrive, s_limelightSubsystem));
 
-    // Reset Pose
-    new JoystickButton(m_driverController, XboxController.Button.kY.value)
-      .whileTrue(new ResetPose(m_robotDrive, s_limelightSubsystem));
+    // ---------------- Test Joysticks -------------------------------
+    new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)
+    .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem));
+      .whileTrue(new StartShooter(s_shooterSubsystem, 80));
+    
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+      .whileTrue(new StartFloor(s_floorSubsystem, 15));
+    
 
-    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value) 
-      .whileTrue(new StartShooter(s_shooterSubsystem, s_limelightSubsystem));
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
+      .whileTrue(new StartFeeder(s_feederSubsystem, 30));
+ 
     }
 
   /**

@@ -164,7 +164,7 @@ public final class Configs {
 
         static {
             // Coast or Brake
-            intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+            intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
             // Current Limits - ADDED STATOR LIMIT
             intakeConfig.CurrentLimits.SupplyCurrentLimit = 50;
@@ -189,4 +189,5 @@ public final class Configs {
             intakeConfig.Voltage.PeakReverseVoltage = -12.0;
         }
     }
+
 }
