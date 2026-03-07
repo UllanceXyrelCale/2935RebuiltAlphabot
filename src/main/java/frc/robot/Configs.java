@@ -65,7 +65,7 @@ public final class Configs {
                     .pid(1, 0, 0)
                     .outputRange(-1, 1)
                     // Enable PID wrap around for the turning motor. This will allow the PID
-                    // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
+                    // contintake to go through 0 to get to the setpoint i.e. going from 350 degrees
                     // to 10 degrees will go through 0 rather than the other direction which is a
                     // longer route.
                     .positionWrappingEnabled(true)
@@ -196,37 +196,37 @@ public final class Configs {
 
     public static final class intakeMotor {        
         // Create configuration class for our intake motors
-        public static final TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
+        public static final TalonFXConfiguration intakeConfig = new TalonFXConfiguration();
         public static final TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
 
         public static final double PIVOT_GEAR_RATIO = 32.0;
 
         static {
-            // ── Roller ───────────────────────────────────────────────────────────────
+            // ── Intake ───────────────────────────────────────────────────────────────
             // Coast or Brake
-            rollerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+            intakeConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
             // Current Limits - ADDED STATOR LIMIT
-            rollerConfig.CurrentLimits.SupplyCurrentLimit = 40;
-            rollerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-            rollerConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
-            rollerConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+            intakeConfig.CurrentLimits.SupplyCurrentLimit = 40;
+            intakeConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+            intakeConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
+            intakeConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            rollerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            intakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
             // Gear Ratio
-            rollerConfig.Feedback.SensorToMechanismRatio = 1.0;
+            intakeConfig.Feedback.SensorToMechanismRatio = 1.0;
 
             // PID VALUES
-            rollerConfig.Slot0.kP = 0.1;
-            rollerConfig.Slot0.kI = 0.0;
-            rollerConfig.Slot0.kD = 0.0;
-            rollerConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
+            intakeConfig.Slot0.kP = 0.1;
+            intakeConfig.Slot0.kI = 0.0;
+            intakeConfig.Slot0.kD = 0.0;
+            intakeConfig.Slot0.kV = 12.0 / Constants.KrakenX60.kFreeSpeedRPS;
 
             // Voltage Control
-            rollerConfig.Voltage.PeakForwardVoltage = 12.0;
-            rollerConfig.Voltage.PeakReverseVoltage = -12.0;
+            intakeConfig.Voltage.PeakForwardVoltage = 12.0;
+            intakeConfig.Voltage.PeakReverseVoltage = -12.0;
 
             // ── Pivot ───────────────────────────────────────────────────────────────
             pivotConfig.CurrentLimits.SupplyCurrentLimit = 50;

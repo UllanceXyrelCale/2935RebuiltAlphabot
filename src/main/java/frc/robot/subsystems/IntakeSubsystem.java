@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.io.ObjectInputFilter.Config;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -22,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     intakeMotor = new TalonFX(30);
     velocityRequest = new VelocityVoltage(0).withSlot(0);
-    intakeMotor.getConfigurator().apply(Configs.intakeMotor.rollerConfig);
+    intakeMotor.getConfigurator().apply(Configs.intakeMotor.intakeConfig);
   }
 
   public double getintakeSpeed () {
@@ -37,7 +36,5 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     intakeMotor.setControl(velocityRequest.withVelocity(Variables.intake.intakeRPS));
-    SmartDashboard.putNumber("Variable", Variables.intake.intakeRPS);
-    SmartDashboard.putBoolean("At Target Speed", atTargetSpeed());
   }
 }

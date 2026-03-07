@@ -47,7 +47,5 @@ public class FloorSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     topFloorMotor.setControl(velocityRequest.withVelocity(Variables.floor.floorRPS));
-    SmartDashboard.putNumber("Variable", Variables.floor.floorRPS);
-    SmartDashboard.putBoolean("At Target Speed", atTargetSpeed());
   }
 }

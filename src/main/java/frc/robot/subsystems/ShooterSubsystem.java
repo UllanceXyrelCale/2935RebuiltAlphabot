@@ -4,15 +4,12 @@
 
 package frc.robot.subsystems;
 
-import java.io.ObjectInputFilter.Config;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Variables;
@@ -51,9 +48,5 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     rightShooterMotor.setControl(velocityRequest.withVelocity(Variables.shooter.shooterRPS));
-    SmartDashboard.putNumber("left shooter", getLeftShooterSpeed());
-    SmartDashboard.putNumber("right shooter", getRightShooterSpeed());
-    SmartDashboard.putNumber("shooter target", Variables.shooter.shooterRPS);
-    SmartDashboard.putBoolean("At Target Speed", atTargetSpeed());
   }
 }

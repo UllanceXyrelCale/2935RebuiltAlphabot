@@ -37,7 +37,5 @@ public class FeederSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     feederMotor.setControl(velocityRequest.withVelocity(Variables.feeder.feederRPS));
-    SmartDashboard.putNumber("Variable", Variables.feeder.feederRPS);
-    SmartDashboard.putBoolean("At Target Speed", atTargetSpeed());
   }
 }
