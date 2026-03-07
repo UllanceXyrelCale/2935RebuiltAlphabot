@@ -126,8 +126,8 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
       .whileTrue(new StartShooter(s_shooterSubsystem, 70));
     
-    // new JoystickButton(m_driverController, XboxController.Button.kA.value)
-    //   .whileTrue(new StartFloor(s_floorSubsystem, 50));
+    new JoystickButton(m_driverController, XboxController.Button.kA.value)
+      .whileTrue(new StartFloor(s_floorSubsystem, 50));
     
     new JoystickButton(m_driverController, XboxController.Button.kB.value)
       .whileTrue(new StartFeeder(s_feederSubsystem, 50));
@@ -135,11 +135,11 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxController.Button.kX.value)
       .whileTrue(new StartIntake(s_intakeSubsystem, 70));
 
-    new JoystickButton(m_driverController, XboxController.Button.kY.value) 
-      .whileTrue(new SetPivotPosition(s_intakeSubsystem, 0));
+    // new JoystickButton(m_driverController, XboxController.Button.kY.value) 
+    //   .whileTrue(new SetPivotPosition(s_intakeSubsystem, 0));
     
-    new JoystickButton(m_driverController, XboxController.Button.kA.value) 
-      .whileTrue(new SetPivotPosition(s_intakeSubsystem, 90));
+    // new JoystickButton(m_driverController, XboxController.Button.kA.value) 
+    //   .whileTrue(new SetPivotPosition(s_intakeSubsystem, 90));
   }
 
   // ----------  Helper Commands  ---------------
