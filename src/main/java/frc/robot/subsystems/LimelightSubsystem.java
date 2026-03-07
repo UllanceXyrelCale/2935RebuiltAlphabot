@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Variables;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.utils.APTree;
 import frc.robot.utils.Pose;
@@ -11,20 +12,17 @@ import frc.robot.utils.Pose;
 public class LimelightSubsystem extends SubsystemBase {
 
   private static NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+
   private static APTree tagToDistanceLookup = new APTree();
   private static APTree distanceToSpeedLookup = new APTree();
-  private static double distanceMeters = 0;
+  
   private static final double CAMERA_TO_CENTRE = 0.349;
-
-  public double getDistanceMeters() {
-    return distanceMeters;
-  }
 
   // -------------------------------------------------------
   //   Per-tag TY → Distance tables
   // -------------------------------------------------------
   private static final double[][] T10_DISTANCE_DATA = {
-    {19.06, 0.71},
+    {19.06, 0.71}, // {tY, distance}
     {13.98, 0.93},
     {11.34, 1.00},
     {6.71, 1.27},
@@ -39,7 +37,7 @@ public class LimelightSubsystem extends SubsystemBase {
   };
 
   private static final double[][] T2_DISTANCE_DATA = {
-    {4.93 ,1.30},
+    {4.93 ,1.30}, // {tY, distance}
     {4.15, 1.40},
     {2.37, 1.52},
     {0.20, 1.73},
@@ -52,11 +50,12 @@ public class LimelightSubsystem extends SubsystemBase {
   };
 
   private static final double[][] T5_DISTANCE_DATA = {
-    {21.10, 10.93},
+    {21.10, 10.93}, // {tY, distance}
+    {10, 0},
   };
 
   private static final double[][] T13_DISTANCE_DATA = {
-    {-15.91, 0.70},
+    {-15.91, 0.70}, // {tY, distance}
     {-16.53, 0.94},
     {-16.71, 1.10},
     {-16.88, 1.23},
@@ -70,7 +69,7 @@ public class LimelightSubsystem extends SubsystemBase {
   };
 
   private static final double[][] T1_DISTANCE_DATA = { // Official
-    {14,98, 0.52},
+    {14.98, 0.52}, // {tY, distance}
     {4.87, 0.81},
     {2.10, 0.94},
     {-1.02, 1.20},
@@ -84,7 +83,7 @@ public class LimelightSubsystem extends SubsystemBase {
   };
 
   private static final double[][] T12_DISTANCE_DATA = { // Official
-    {16.78, 0.52},
+    {16.78, 0.52}, // {tY, distance}
     {7.14, 0.80},
     {2.16, 0.97},
     {-1.41, 1.20},
@@ -95,7 +94,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
   // Distance → Shooter RPS
   private static final double[][] SPEED_DATA = {
-    {1.67, 56}, // First good point
+    {1.67, 56}, // {distance, speed}
     {1.79, 58},
     {1.92, 59},
     {2.10, 60},
@@ -128,8 +127,8 @@ public class LimelightSubsystem extends SubsystemBase {
   }
 
   /** Tags that are valid targets for auto-aiming/rotation. */
-  public boolean isAimTag(double IDNum) {
-    int id = (int) Math.round(IDNum);
+  public boolean isAimTag() {
+    int id = (int) Math.round(Variables.limelight.tID);
     return id == 2 || id == 5 || id == 10 || id == 13 || id == 12 || id == 1;
   }
 
@@ -138,26 +137,26 @@ public class LimelightSubsystem extends SubsystemBase {
   // -------------------------------------------------------
 
   /** Returns distance to the given tag ID using the current TY reading. */
-  public double getTagDistance(double IDNum) {
-    double[][] data = getDataForTag(IDNum);
+  public double getTagDistance() {
+    double[][] data = getDataForTag(Variables.limelight.tID);
     if (data == null) return 0;
 
     tagToDistanceLookup = new APTree();
     tagToDistanceLookup.InsertValues(data);
-    return tagToDistanceLookup.GetValue(getTY());
+    return tagToDistanceLookup.GetValue(Variables.limelight.tY);
   }
 
   /** Returns the shooter RPS for the given tag ID based on distance. */
-  public double getShooterRPS(double IDNum) {
-    if (getDataForTag(IDNum) == null) return 30.0;
-    return distanceToSpeedLookup.GetValue(getTagDistance(IDNum));
+  public double getShooterRPS() {
+    if (getDataForTag(Variables.limelight.tID) == null) return 30.0;
+    return distanceToSpeedLookup.GetValue(Variables.limelight.distanceMeters);
   }
 
   /** Returns TX if the robot needs to turn, 0 if already aligned or no target. */
   public double getTurnAngle() {
-    if (!hasValidTarget()) return 0;
-    if (Math.abs(getTX()) <= VisionConstants.kAngleTolerance) return 0;
-    return getTX();
+    if (!Variables.limelight.hasValidTarget) return 0;
+    if (Math.abs(Variables.limelight.tX) <= VisionConstants.kAngleTolerance) return 0;
+    return Variables.limelight.tX;
   }
 
   // -------------------------------------------------------
@@ -168,36 +167,18 @@ public class LimelightSubsystem extends SubsystemBase {
     return limelight.getEntry(entry).getDouble(0);
   }
 
-  public double[] getArraryEntry(String entry) {
+  public double[] getArrayEntry(String entry) {
     return limelight.getEntry(entry).getDoubleArray(new double[6]);
-  }
-
-  public boolean hasValidTarget() {
-    return limelight.getEntry("tv").getDouble(0) == 1;
-  }
-
-  public double getTID() {
-    return getDoubleEntry("tid");
-  }
-
-  public double getTA()  {
-    return getDoubleEntry("ta");
-  }
-  public double getTX()  {
-    return getDoubleEntry("tx");
-  }
-  public double getTY()  {
-    return getDoubleEntry("ty");
   }
 
   public Pose getPoseFromTag(double robotYawDeg) {
 
-    if (!hasValidTarget()) {
+    if (!Variables.limelight.hasValidTarget) {
         return null; // or return current pose instead
     }
 
-    double distance = distanceMeters + CAMERA_TO_CENTRE;  // already updating in periodic
-    double tx = getTX();
+    double distance = Variables.limelight.distanceMeters + CAMERA_TO_CENTRE;  // already updating in periodic
+    double tx = Variables.limelight.tX;
 
     // Bearing from field frame
     double bearingRad = Math.toRadians(robotYawDeg - tx);
@@ -215,17 +196,25 @@ public class LimelightSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("HAS TARGET", hasValidTarget());
+    Variables.limelight.hasValidTarget = limelight.getEntry("tv").getDouble(0) == 1;
+    SmartDashboard.putBoolean("HAS TARGET", Variables.limelight.hasValidTarget);
 
-    if (hasValidTarget()) {
-      double tid = getTID();
-      distanceMeters = getTagDistance(tid);
-      SmartDashboard.putNumber("tid", tid);
-      SmartDashboard.putNumber("ta", getTA());
-      SmartDashboard.putNumber("ty", getTY());
-      SmartDashboard.putNumber("tx", getTX());
-      SmartDashboard.putNumber("Distance from tag", getTagDistance(tid));
-      SmartDashboard.putBoolean("Is Aim Tag", isAimTag(tid));
+    if (Variables.limelight.hasValidTarget) {
+        Variables.limelight.tID = getDoubleEntry("tid");
+        Variables.limelight.tA  = getDoubleEntry("ta");
+        Variables.limelight.tX  = getDoubleEntry("tx");
+        Variables.limelight.tY  = getDoubleEntry("ty");
+
+        Variables.limelight.distanceMeters = getTagDistance();
+        Variables.limelight.turnAngle      = getTurnAngle();
+        Variables.limelight.shooterRPS     = getShooterRPS();
+
+        SmartDashboard.putNumber("tid", Variables.limelight.tID);
+        SmartDashboard.putNumber("ta", Variables.limelight.tA);
+        SmartDashboard.putNumber("ty", Variables.limelight.tY);
+        SmartDashboard.putNumber("tx", Variables.limelight.tX);
+        SmartDashboard.putNumber("Distance from tag", Variables.limelight.distanceMeters);
+        SmartDashboard.putBoolean("Is Aim Tag", isAimTag());
     }
   }
 }
