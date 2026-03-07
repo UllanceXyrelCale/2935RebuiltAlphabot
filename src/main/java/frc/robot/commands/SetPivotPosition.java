@@ -18,11 +18,13 @@ public class SetPivotPosition extends Command {
   }
 
   @Override
-  public void initialize() {}
+  public void initialize() {
+    Variables.pivot.pivotPosition = position;
+  }
 
   @Override
   public void execute() {
-    Variables.pivot.pivotPosition = position;
+
   }
 
 

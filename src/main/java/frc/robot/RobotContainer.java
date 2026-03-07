@@ -74,12 +74,6 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
       .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value) 
-      .whileTrue(new SetShooterRPS(s_shooterSubsystem, 60));
-
-    new JoystickButton(m_driverController, XboxController.Button.kB.value) 
-      .whileTrue(new SetFeederRPS(s_feederSubsystem, 50));
-
     new JoystickButton(m_driverController, XboxController.Button.kX.value) 
       .whileTrue(new SetFloorRPS(s_floorSubsystem, 50));
 
