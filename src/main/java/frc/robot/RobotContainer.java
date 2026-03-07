@@ -72,17 +72,17 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
-      .whileTrue(new SetIntakeRPS(s_intakeSubsystem, 0));
-
     new JoystickButton(m_driverController, XboxController.Button.kA.value) 
-      .whileTrue(new SetFloorRPS(s_floorSubsystem, 0));
+      .whileTrue(new SetIntakeRPS(s_intakeSubsystem, 65));
 
-    new JoystickButton(m_driverController, XboxController.Button.kB.value) 
-      .whileTrue(new SetFeederRPS(s_feederSubsystem, 0));
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value) 
+      .whileTrue(new SetFloorRPS(s_floorSubsystem, 25));
+
+    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
+      .whileTrue(new SetFeederRPS(s_feederSubsystem, 80));
 
     new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value) 
-      .whileTrue(new SetShooterRPS(s_shooterSubsystem, 0));
+      .whileTrue(new SetShooterRPS(s_shooterSubsystem, 60));
 
   
   }

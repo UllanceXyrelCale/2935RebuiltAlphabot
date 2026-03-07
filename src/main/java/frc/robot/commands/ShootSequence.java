@@ -1,33 +1,44 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.FloorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ShootSequence extends Command {
-  /** Creates a new ShootSequence. */
-  public ShootSequence() {
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
+public class ShootSequence extends SequentialCommandGroup {
+  public ShootSequence(
+      ShooterSubsystem shooter,
+      FeederSubsystem feeder,
+      FloorSubsystem floor,
+      DriveSubsystem drive
+  ) {
+    addCommands(
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+      // new TurnToAngle(drive, limelight),
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
+      new ParallelCommandGroup(
+        // Lock drivetrain in place
+        // new RunCommand(() -> drive.setX(), drive),
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+        new ParallelCommandGroup(
+          // Shooter runs the entire time, never interrupted
+          new SetShooterRPS(shooter, 65),
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+          new SequentialCommandGroup(
+            // Wait until shooter is up to speed before feeding
+            new WaitUntilCommand(() -> shooter.atTargetSpeed()),
+
+            // Then run floor and feeder
+            new ParallelCommandGroup(
+              new SetFloorRPS(floor, 25),
+              new SetFeederRPS(feeder, 80)
+            )
+          )
+        )
+      )
+    );
   }
 }
