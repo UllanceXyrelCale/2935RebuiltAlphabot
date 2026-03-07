@@ -4,6 +4,7 @@ import java.util.Set;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,21 +16,14 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AimToTag;
-import frc.robot.commands.DriveToPoint;
-import frc.robot.commands.ResetPose;
-import frc.robot.commands.SetPivotPosition;
-import frc.robot.commands.ShootSequence;
-import frc.robot.commands.StartFeeder;
-import frc.robot.commands.StartFloor;
-import frc.robot.commands.StartIntake;
-import frc.robot.commands.StartShooter;
-import frc.robot.commands.TurnToAngle;
+import frc.robot.commands.SetFeederRPS;
+import frc.robot.commands.SetFloorRPS;
+import frc.robot.commands.SetIntakeRPS;
+import frc.robot.commands.SetShooterRPS;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FloorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -43,7 +37,6 @@ public class RobotContainer {
   private final ShooterSubsystem s_shooterSubsystem = new ShooterSubsystem();
   private final FloorSubsystem s_floorSubsystem = new FloorSubsystem();
   private final FeederSubsystem s_feederSubsystem = new FeederSubsystem();
-  private final LimelightSubsystem s_limelightSubsystem = new LimelightSubsystem();
   private final IntakeSubsystem s_intakeSubsystem = new IntakeSubsystem();
 
   // The driver's controller
@@ -79,64 +72,19 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-  
+    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
+      .whileTrue(new SetIntakeRPS(s_intakeSubsystem, 0));
 
-    // Auto Test
-    // new JoystickButton(m_driverController, XboxController.Button.kX.value)
-    //    .whileTrue(new SequentialCommandGroup(
-    //      new ResetPose(m_robotDrive, s_limelightSubsystem),
-    //      new DriveToPoint(m_robotDrive, 2.6, 0, 0),
-    //      new TurnToAngle(m_robotDrive, 90),
-    //      new ParallelCommandGroup(
-    //       new DriveToPoint(m_robotDrive, 2.6, 1.95, 90),
-    //       new StartIntake(s_intakeSubsystem, 60).withTimeout(1.5)
-    //      ),
-    //      new DriveToPoint(m_robotDrive, 2.3, 0, 180),
-    //      new ResetPose(m_robotDrive, s_limelightSubsystem),
-    //      new DriveToPoint(m_robotDrive, -1.85, 0.5, 180),
-    //      new TurnToAngle(m_robotDrive, 75),
-    //      new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(3)
-    //     new TurnToAngle(m_robotDrive, 180),
-    //     new WaitCommand(.20),
-    //     new ResetPose(m_robotDrive, s_limelightSubsystem),
-    //     new WaitCommand(.20),
-    //     new DriveToPoint(m_robotDrive, 0.81, 0, 180),
-    //     new WaitCommand(5),
-    //     new DriveToPoint(m_robotDrive, 2.81, 0, 70),
-    //     new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem).withTimeout(5)
-    //  ));
-    
-    // Final Joystick Commands
-    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-        .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
-
-    // new JoystickButton(m_driverController, XboxController.Button.kA.value)
-    //   .whileTrue(new TurnToAngle(m_robotDrive, s_limelightSubsystem, 2));
-
-    // new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-    // .whileTrue(new ResetPose(m_robotDrive, s_limelightSubsystem));
-
-    // ---------------- Test Joysticks -------------------------------
-    new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)
-    .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem));
-
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
-      .whileTrue(new StartShooter(s_shooterSubsystem, 70));
-    
-    // new JoystickButton(m_driverController, XboxController.Button.kA.value)
-    //   .whileTrue(new StartFloor(s_floorSubsystem, 0.83));
-    
-    new JoystickButton(m_driverController, XboxController.Button.kB.value)
-      .whileTrue(new StartFeeder(s_feederSubsystem, 0.83));
- 
-    new JoystickButton(m_driverController, XboxController.Button.kX.value)
-      .whileTrue(new StartIntake(s_intakeSubsystem, 70));
-
-    new JoystickButton(m_driverController, XboxController.Button.kY.value) 
-      .whileTrue(new SetPivotPosition(s_intakeSubsystem, 0));
-    
     new JoystickButton(m_driverController, XboxController.Button.kA.value) 
-      .whileTrue(new SetPivotPosition(s_intakeSubsystem, -90));
+      .whileTrue(new SetFloorRPS(s_floorSubsystem, 0));
+
+    new JoystickButton(m_driverController, XboxController.Button.kB.value) 
+      .whileTrue(new SetFeederRPS(s_feederSubsystem, 0));
+
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value) 
+      .whileTrue(new SetShooterRPS(s_shooterSubsystem, 0));
+
+  
   }
 
 
@@ -148,37 +96,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return null;
-    // return new SequentialCommandGroup(
-    //     new DriveToPoint(m_robotDrive, 3, 3, 270),
-    //     new WaitCommand(1),
-    //     new DriveToPoint(m_robotDrive, 0, 0, 270),
-    //     new TurnToAngle(m_robotDrive, s_limelightSubsystem),
-    //     new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, s_limelightSubsystem)
-    // );
+
   }
-
-//     public Command aimToAllowedTagOnce() {
-//     return Commands.defer(
-//         () -> {
-//           // Gate: must see a target and it must be an allowed tag
-//           if (!s_limelightSubsystem.hasValidTarget() || !s_limelightSubsystem.isTagAllowedForRotation()) {
-//             return Commands.none();
-//           }
-
-//           double txDeg = s_limelightSubsystem.getTX();
-
-//           // Use continuous heading for control math (not the wrapped [0..360) one)
-//           double currentYawDeg = m_robotDrive.getPoseContinuous().getAngle();
-
-//           // Typical mapping: targetYaw = currentYaw - tx
-//           // If it turns the wrong way on your robot, flip the sign to +tx.
-//           double targetYawDeg = currentYawDeg - txDeg;
-
-//           return new TurnToAngle(m_robotDrive, targetYawDeg);
-//         },
-//         Set.of(m_robotDrive) // requirements for the *returned* command
-//     );
-//   }
 
 public DriveSubsystem getDriveSubsystem() {
     return m_robotDrive;

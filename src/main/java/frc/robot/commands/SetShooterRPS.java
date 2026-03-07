@@ -5,12 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Variables;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ShootSequence extends Command {
-  /** Creates a new ShootSequence. */
-  public ShootSequence() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class SetShooterRPS extends Command {
+  private final ShooterSubsystem ShooterSubsystem;
+  private final double rps;
+  
+  public SetShooterRPS(ShooterSubsystem ShooterSubsystem, double rps) {
+    this.ShooterSubsystem = ShooterSubsystem;
+    this.rps = rps;
+
+    addRequirements(ShooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -19,11 +26,16 @@ public class ShootSequence extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    Variables.shooter.shooterRPS = rps;
+  }
+
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Variables.shooter.shooterRPS = 0;
+  }
 
   // Returns true when the command should end.
   @Override
