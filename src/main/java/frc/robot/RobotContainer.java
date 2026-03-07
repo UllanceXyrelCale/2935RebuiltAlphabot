@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.Purge;
+import frc.robot.commands.RunIntake;
 import frc.robot.commands.SetFeederRPS;
 import frc.robot.commands.SetFloorRPS;
 import frc.robot.commands.SetIntakeRPS;
@@ -74,20 +76,20 @@ public class RobotContainer {
     new JoystickButton(m_driverController, XboxController.Button.kStart.value)
       .whileTrue(new InstantCommand(() -> m_robotDrive.zeroHeading(), m_robotDrive));
 
-    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
-      .whileTrue(new SetFloorRPS(s_floorSubsystem, 50));
-
-    new JoystickButton(m_driverController, XboxController.Button.kY.value)
-      .whileTrue(new SetPivotPosition(s_pivotSubsystem, 10));
-
-    new JoystickButton(m_driverController, XboxController.Button.kA.value)
-      .whileTrue(new SetPivotPosition(s_pivotSubsystem, 110));
-
     new Trigger(() -> m_driverController.getRightTriggerAxis() > 0.2)
-      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive));
+      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, Variables.limelight.shooterRPS));
 
     new Trigger(() -> m_driverController.getLeftTriggerAxis() > 0.2)
-      .whileTrue(new SetIntakeRPS(s_intakeSubsystem, 50));
+      .whileTrue(new RunIntake(s_intakeSubsystem, s_pivotSubsystem, 60, 110));
+
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+      .whileTrue(new Purge(s_feederSubsystem, s_shooterSubsystem, s_intakeSubsystem, s_floorSubsystem));
+
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value)
+      .whileTrue(new SetPivotPosition(s_pivotSubsystem, 10));
+    
+      new JoystickButton(m_driverController, XboxController.Button.kA.value)
+      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive, 65));
   
   }
 
