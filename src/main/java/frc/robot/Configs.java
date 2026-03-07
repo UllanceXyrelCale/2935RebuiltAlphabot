@@ -82,7 +82,7 @@ public final class Configs {
             shooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
             // Current Limits
-            shooterConfig.CurrentLimits.SupplyCurrentLimit = 60;
+            shooterConfig.CurrentLimits.SupplyCurrentLimit = 120;
             shooterConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             shooterConfig.CurrentLimits.StatorCurrentLimit = 80;  // Prevents overheating
             shooterConfig.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -115,13 +115,13 @@ public final class Configs {
             feederConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
             // Current Limits - ADDED STATOR LIMIT
-            feederConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            feederConfig.CurrentLimits.SupplyCurrentLimit = 60;
             feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             feederConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
             feederConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
             // Invert Motor
-            feederConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+            feederConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
             // Gear Ratio
             feederConfig.Feedback.SensorToMechanismRatio = 1.0;
@@ -160,7 +160,7 @@ public final class Configs {
             floorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
             // Current Limits - ADDED STATOR LIMIT
-            floorConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            floorConfig.CurrentLimits.SupplyCurrentLimit = 40;
             floorConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             floorConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
             floorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -207,7 +207,7 @@ public final class Configs {
             rollerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
             // Current Limits - ADDED STATOR LIMIT
-            rollerConfig.CurrentLimits.SupplyCurrentLimit = 50;
+            rollerConfig.CurrentLimits.SupplyCurrentLimit = 40;
             rollerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
             rollerConfig.CurrentLimits.StatorCurrentLimit = 60;  // NEW - medium load mechanism
             rollerConfig.CurrentLimits.StatorCurrentLimitEnable = true;

@@ -24,8 +24,8 @@ public class FloorSubsystem extends SubsystemBase {
 
   /** Creates a new floorSubsytem. */
   public FloorSubsystem() {
-    topFloorMotor = new TalonFX(30);
-    bottomFloorMotor = new TalonFX(31);
+    topFloorMotor = new TalonFX(31);
+    bottomFloorMotor = new TalonFX(32);
     
     velocityRequest = new VelocityVoltage(0).withSlot(0);
     topFloorMotor.getConfigurator().apply(Configs.floorMotor.floorConfig);

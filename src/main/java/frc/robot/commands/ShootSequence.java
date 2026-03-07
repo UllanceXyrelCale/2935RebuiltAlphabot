@@ -33,8 +33,8 @@ public class ShootSequence extends SequentialCommandGroup {
 
             // Then run floor and feeder
             new ParallelCommandGroup(
-              new SetFloorRPS(floor, 25),
-              new SetFeederRPS(feeder, 80)
+              new SetFloorRPS(floor, 40),
+              new SetFeederRPS(feeder, 90)
             )
           )
         )

@@ -20,6 +20,7 @@ import frc.robot.commands.SetFeederRPS;
 import frc.robot.commands.SetFloorRPS;
 import frc.robot.commands.SetIntakeRPS;
 import frc.robot.commands.SetShooterRPS;
+import frc.robot.commands.ShootSequence;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FloorSubsystem;
@@ -72,18 +73,20 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, XboxController.Button.kA.value) 
+    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value) 
       .whileTrue(new SetIntakeRPS(s_intakeSubsystem, 65));
 
-    new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value) 
+    new JoystickButton(m_driverController, XboxController.Button.kA.value) 
       .whileTrue(new SetFloorRPS(s_floorSubsystem, 25));
 
-    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
+    new JoystickButton(m_driverController, XboxController.Button.kB.value) 
       .whileTrue(new SetFeederRPS(s_feederSubsystem, 80));
 
-    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value) 
+    new JoystickButton(m_driverController, XboxController.Button.kX.value) 
       .whileTrue(new SetShooterRPS(s_shooterSubsystem, 60));
 
+    new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value)
+      .whileTrue(new ShootSequence(s_shooterSubsystem, s_feederSubsystem, s_floorSubsystem, m_robotDrive));
   
   }
 

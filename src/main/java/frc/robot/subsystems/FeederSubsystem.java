@@ -20,7 +20,7 @@ public class FeederSubsystem extends SubsystemBase {
 
   /** Creates a new feederSubsytem. */
   public FeederSubsystem() {
-    feederMotor = new TalonFX(30);
+    feederMotor = new TalonFX(33);
     velocityRequest = new VelocityVoltage(0).withSlot(0);
     feederMotor.getConfigurator().apply(Configs.feederMotor.feederConfig);
   }

@@ -18,36 +18,42 @@ import frc.robot.Configs;
 import frc.robot.Variables;
 
 public class ShooterSubsystem extends SubsystemBase {
-  private final TalonFX topShooterMotor;
-  private final TalonFX bottomShooterMotor; 
+  private final TalonFX rightShooterMotor;
+  private final TalonFX leftShooterMotor; 
   private final VelocityVoltage velocityRequest;
 
   /** Creates a new ShooterSubsytem. */
   public ShooterSubsystem() {
-    topShooterMotor = new TalonFX(40);
-    bottomShooterMotor = new TalonFX(41);
+    rightShooterMotor = new TalonFX(40);
+    leftShooterMotor = new TalonFX(41);
     
     velocityRequest = new VelocityVoltage(0).withSlot(0);
-    topShooterMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
+    rightShooterMotor.getConfigurator().apply(Configs.shooterMotor.shooterConfig);
 
-    bottomShooterMotor.setControl(   
-      new Follower(topShooterMotor.getDeviceID(), MotorAlignmentValue.Aligned)
+    leftShooterMotor.setControl(   
+      new Follower(rightShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed)
     );
   }
 
-  public double getShooterSpeed () {
-    return topShooterMotor.getVelocity().getValueAsDouble();
+  public double getRightShooterSpeed () {
+    return rightShooterMotor.getVelocity().getValueAsDouble();
+  }
+
+    public double getLeftShooterSpeed () {
+    return rightShooterMotor.getVelocity().getValueAsDouble();
   }
 
   public boolean atTargetSpeed () {
-    return Math.abs(getShooterSpeed() - Variables.shooter.shooterRPS) < 1;
+    return (Math.abs(getRightShooterSpeed() - Variables.shooter.shooterRPS) < 1) && (Math.abs(getLeftShooterSpeed() - Variables.shooter.shooterRPS) < 1);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    topShooterMotor.setControl(velocityRequest.withVelocity(Variables.shooter.shooterRPS));
-    SmartDashboard.putNumber("Variable", Variables.shooter.shooterRPS);
+    rightShooterMotor.setControl(velocityRequest.withVelocity(Variables.shooter.shooterRPS));
+    SmartDashboard.putNumber("left shooter", getLeftShooterSpeed());
+    SmartDashboard.putNumber("right shooter", getRightShooterSpeed());
+    SmartDashboard.putNumber("shooter target", Variables.shooter.shooterRPS);
     SmartDashboard.putBoolean("At Target Speed", atTargetSpeed());
   }
 }
